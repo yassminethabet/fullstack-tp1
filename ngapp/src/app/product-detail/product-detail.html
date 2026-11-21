@@ -1,0 +1,28 @@
+<div class="container py-4">
+  <a routerLink="/products" class="btn btn-outline-secondary mb-3">← Back to catalogue</a>
+
+  @if (loading()) {
+    <div class="text-center">
+      <div class="spinner-border"></div>
+    </div>
+  } @else if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  } @else if (product(); as p) {
+    <div class="row">
+      <div class="col-md-5">
+        <img [src]="p.thumbnail" [alt]="p.title" class="img-fluid" />
+      </div>
+      <div class="col-md-7">
+        <h1>{{ p.title }}</h1>
+        @if (p.brand) {
+          <p class="text-muted">Brand: {{ p.brand }}</p>
+        }
+        <p>Category: {{ p.category }}</p>
+        <p>{{ p.description }}</p>
+        <p class="fs-4 fw-bold">{{ p.price }} $</p>
+        <p>Rating: {{ p.rating }} / 5</p>
+        <p>Stock: {{ p.stock }}</p>
+      </div>
+    </div>
+  }
+</div>
