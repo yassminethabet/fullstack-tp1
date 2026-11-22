@@ -39,3 +39,20 @@ DELETE {{base}}/products/101
 
 ### not found -> 404
 GET {{base}}/products/99999
+### create a review
+POST {{base}}/products/1/reviews
+Content-Type: application/json
+
+{ "author": "Yasmine", "rating": 5, "comment": "Great product" }
+
+### list reviews
+GET {{base}}/products/1/reviews
+
+### invalid review -> 400
+POST {{base}}/products/1/reviews
+Content-Type: application/json
+
+{ "author": "Y", "rating": 9, "comment": "" }
+
+### review on unknown product -> 404
+GET {{base}}/products/99999/reviews

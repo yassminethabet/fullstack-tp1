@@ -19,3 +19,14 @@ export interface ProductsResponse {
   skip: number;
   limit: number;
 }
+export interface CategoryWithCount extends Category {
+  _count: { products: number };
+}
+export interface ProductInput {
+  title: string;
+  description: string;
+  price: number;
+  thumbnail: string;
+  stock: number;
+  category: string;
+}

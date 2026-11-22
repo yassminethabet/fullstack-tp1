@@ -1,51 +1,95 @@
-# Product Catalogue: Angular and Next.js
+# Full Stack Product Catalogue
 
-Product catalogue built with two front-end stacks, using the public API https://dummyjson.com/products.
+Product catalogue with a REST API (Express + Prisma + PostgreSQL) and two front-ends (Angular + Bootstrap, Next.js + Tailwind CSS).
 
-| App | Stack | Local port | Docker image |
-|-----|-------|------------|--------------|
-| `ngapp/` | Angular + Bootstrap | 4200 | `yasminethabet/ngapp:1.0` |
-| `nxapp/` | Next.js + Tailwind CSS | 3000 | `yasminethabet/nxapp:1.0` |
+| Part | Stack | Port |
+|------|-------|------|
+| `api/` | Node.js, Express 5, Prisma 7, PostgreSQL 17, Zod | 4000 |
+| `ngapp/` | Angular + Bootstrap | 4200 |
+| `nxapp/` | Next.js + Tailwind CSS | 3000 |
+| `db` | PostgreSQL (Docker) | 5432 |
 
-## Run locally
+## Features
+- Product list with pagination, search (`q`) and category filter
+- Product detail page
+- Admin page: create, edit, delete products
+- Reviews per product (`Review` model)
+- Validation (Zod) and central error handling
 
-### Angular
+## Prerequisites
+- Node.js 24 LTS
+- Docker Desktop
+
+## Run with Docker (everything)
 ```bash
-cd ngapp
-npm install
-npx ng serve
+docker compose up --build
 ```
-Open http://localhost:4200
+- Angular: http://localhost:4200
+- Next.js: http://localhost:3000
+- API: http://localhost:4000/api/health
 
-### Next.js
-```bash
-cd nxapp
-npm install
-npm run dev
-```
-Open http://localhost:3000
+Stop (keeps the data): `docker compose down`
+Stop and delete the database: `docker compose down -v`
 
-## Run with Docker
+## Run without Docker (development)
 
-### Angular
-```bash
-cd ngapp
-docker build -t yasminethabet/ngapp:1.0 .
-docker run -p 8080:80 yasminethabet/ngapp:1.0
-```
-Open http://localhost:8080
+1. Start the database:
+   ```bash
+   docker compose up -d db
+   ```
+2. API:
+   ```bash
+   cd api
+   copy .env.example .env
+   npm install
+   npx prisma migrate deploy
+   npx prisma generate
+   npx prisma db seed
+   npm run dev
+   ```
+3. Angular:
+   ```bash
+   cd ngapp
+   npm install
+   npx ng serve
+   ```
+4. Next.js:
+   ```bash
+   cd nxapp
+   copy .env.example .env.local
+   npm install
+   npm run dev
+   ```
 
-### Next.js
-```bash
-cd nxapp
-docker build -t yasminethabet/nxapp:1.0 .
-docker run -p 3001:3000 yasminethabet/nxapp:1.0
-```
-Open http://localhost:3001
+## Environment variables
+
+| Variable | Where | Description |
+|----------|-------|-------------|
+| `DATABASE_URL` | `api/.env` | PostgreSQL connection string |
+| `PORT` | `api/.env` | API port (default 4000) |
+| `API_URL` | `nxapp/.env.local` | API URL used by Next.js server components |
+| `NEXT_PUBLIC_API_URL` | `nxapp/.env.local` | API URL used by the browser |
+
+Angular reads the API URL from `ngapp/src/environments/environment.ts`.
+
+## API endpoints
+
+| Method | URL | Description | Success |
+|--------|-----|-------------|---------|
+| GET | `/api/health` | Health check | 200 |
+| GET | `/api/products?limit=12&skip=0&q=&category=` | List with pagination, search, filter | 200 |
+| GET | `/api/products/:id` | One product | 200 |
+| POST | `/api/products` | Create a product | 201 |
+| PATCH | `/api/products/:id` | Update a product | 200 |
+| DELETE | `/api/products/:id` | Delete a product | 204 |
+| GET | `/api/products/:id/reviews` | List reviews of a product | 200 |
+| POST | `/api/products/:id/reviews` | Add a review | 201 |
+| GET | `/api/categories` | Categories with product count | 200 |
+
+Errors: `400` validation failed, `404` not found, `500` server error.
+Example requests: `api/requests.http` (VS Code REST Client extension).
 
 ## Docker Hub images
-- https://hub.docker.com/r/yasminethabet/ngapp
-- https://hub.docker.com/r/yasminethabet/nxapp
-
-## Screenshots
-See the `screenshots/` folder.
+- `yasminethabet/ngapp:2.0`
+- `yasminethabet/nxapp:2.0`
+- `yasminethabet/api:1.0`

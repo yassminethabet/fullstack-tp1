@@ -3,6 +3,10 @@ export interface Category {
   name: string;
 }
 
+export interface CategoryWithCount extends Category {
+  _count: { products: number };
+}
+
 export interface Product {
   id: number;
   title: string;
@@ -11,6 +15,15 @@ export interface Product {
   thumbnail: string;
   stock: number;
   category: Category;
+}
+
+export interface ProductInput {
+  title: string;
+  description: string;
+  price: number;
+  thumbnail: string;
+  stock: number;
+  category: string;
 }
 
 export interface ProductsResponse {

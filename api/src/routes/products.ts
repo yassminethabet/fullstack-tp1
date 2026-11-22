@@ -2,7 +2,8 @@ import { Router } from "express";
 import { validate } from "../middlewares/validate.js";
 import { idParam, listQuery, productBody, productPatch } from "../schemas/product.js";
 import * as service from "../services/productService.js";
-
+import { reviewBody } from "../schemas/review.js";
+import * as reviewService from "../services/reviewService.js";
 export const productsRouter = Router();
 
 productsRouter.get("/", validate(listQuery, "query"), async (_req, res) => {
@@ -32,3 +33,23 @@ productsRouter.delete("/:id", validate(idParam, "params"), async (_req, res) => 
   await service.remove(res.locals.params.id);
   res.status(204).end();
 });
+productsRouter.get("/:id/reviews", validate(idParam, "params"), async (_req, res) => {
+  const id = res.locals.params.id;
+  if (!(await service.getById(id))) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+  res.json(await reviewService.listByProduct(id));
+});
+
+productsRouter.post(
+  "/:id/reviews",
+  validate(idParam, "params"),
+  validate(reviewBody),
+  async (_req, res) => {
+    const id = res.locals.params.id;
+    if (!(await service.getById(id))) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    res.status(201).json(await reviewService.create(id, res.locals.body));
+  }
+);

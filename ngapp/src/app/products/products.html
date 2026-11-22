@@ -1,12 +1,46 @@
 <div class="container py-4">
-<h1 class="fw-bold mb-1">Product catalogue</h1>
-<p class="text-muted mb-4">{{ total() }} products</p>
+  <h1 class="fw-bold mb-1">Product catalogue</h1>
+  <p class="text-muted mb-4">{{ total() }} products</p>
+
+  <form class="row g-2 mb-4" (ngSubmit)="search()">
+    <div class="col-md-5">
+      <input
+        type="text"
+        name="q"
+        class="form-control"
+        placeholder="Search a product..."
+        [(ngModel)]="q"
+      />
+    </div>
+    <div class="col-md-4">
+      <select
+        name="category"
+        class="form-select"
+        [(ngModel)]="category"
+        (ngModelChange)="search()"
+      >
+        <option value="">All categories</option>
+        @for (c of categories(); track c.id) {
+          @if (c._count.products > 0) {
+            <option [value]="c.name">{{ c.name }} ({{ c._count.products }})</option>
+          }
+        }
+      </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+      <button type="submit" class="btn btn-primary flex-fill">Search</button>
+      <button type="button" class="btn btn-outline-secondary" (click)="reset()">Reset</button>
+    </div>
+  </form>
+
   @if (loading()) {
     <div class="text-center">
       <div class="spinner-border"></div>
     </div>
   } @else if (error()) {
     <div class="alert alert-danger">{{ error() }}</div>
+  } @else if (products().length === 0) {
+    <div class="alert alert-info">No products found.</div>
   } @else {
     <div class="row row-cols-1 row-cols-md-3 g-4">
       @for (p of products(); track p.id) {
