@@ -2,10 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../product';
 import { Product } from '../models/product';
-
+import { CurrencyPipe } from '@angular/common';
 @Component({
   selector: 'app-product-detail',
-  imports: [RouterLink],
+  imports: [RouterLink, CurrencyPipe],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css',
 })

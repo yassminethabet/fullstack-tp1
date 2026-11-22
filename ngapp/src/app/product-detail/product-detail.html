@@ -14,13 +14,9 @@
       </div>
       <div class="col-md-7">
         <h1>{{ p.title }}</h1>
-        @if (p.brand) {
-          <p class="text-muted">Brand: {{ p.brand }}</p>
-        }
-        <p>Category: {{ p.category }}</p>
+        <p class="text-muted text-capitalize">Category: {{ p.category.name }}</p>
         <p>{{ p.description }}</p>
-        <p class="fs-4 fw-bold">{{ p.price }} $</p>
-        <p>Rating: {{ p.rating }} / 5</p>
+        <p class="fs-4 fw-bold">{{ p.price | currency }}</p>
         <p>Stock: {{ p.stock }}</p>
       </div>
     </div>

@@ -10,7 +10,9 @@ export default async function ProductDetail({
 }) {
   const { id } = await params;
 
-  const response = await fetch(`https://dummyjson.com/products/${id}`);
+  const response = await fetch(`${process.env.API_URL}/products/${id}`, {
+    cache: "no-store",
+  });
   if (response.status === 404) notFound();
   if (!response.ok) throw new Error("HTTP " + response.status);
   const product: Product = await response.json();
@@ -37,18 +39,14 @@ export default async function ProductDetail({
 
         <div>
           <h1 className="text-3xl font-bold">{product.title}</h1>
-          {product.brand && (
-            <p className="mt-1 text-gray-500">Brand: {product.brand}</p>
-          )}
           <p className="mt-1 capitalize text-gray-500">
-            Category: {product.category}
+            Category: {product.category.name}
           </p>
           <p className="mt-4">{product.description}</p>
           <p className="mt-4 text-3xl font-bold text-blue-600">
-            ${product.price.toFixed(2)}
+            ${Number(product.price).toFixed(2)}
           </p>
-          <p className="mt-2">Rating: {product.rating} / 5</p>
-          <p>Stock: {product.stock}</p>
+          <p className="mt-2">Stock: {product.stock}</p>
         </div>
       </div>
     </div>

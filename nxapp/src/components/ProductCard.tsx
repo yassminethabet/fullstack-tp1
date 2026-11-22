@@ -23,7 +23,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           className="h-48 w-48 object-contain"
         />
         <span className="absolute left-2 top-2 rounded-full bg-white px-2 py-1 text-xs capitalize">
-          {product.category}
+          {product.category.name}
         </span>
       </div>
 
@@ -32,7 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="mt-1 text-sm text-gray-500">{shortDescription}</p>
         <div className="mt-auto flex items-center justify-between pt-4">
           <span className="text-lg font-bold text-blue-600">
-            ${product.price.toFixed(2)}
+            ${Number(product.price).toFixed(2)}
           </span>
           <Link
             href={`/products/${product.id}`}
