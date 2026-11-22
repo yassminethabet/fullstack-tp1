@@ -18,7 +18,7 @@ services:
 
   api:
     build: ./api
-    image: yasminethabet/api:1.0
+    image: yasminethabet/api:1.1
     environment:
       DATABASE_URL: postgresql://app:app@db:5432/shop?schema=public
       PORT: 4000
